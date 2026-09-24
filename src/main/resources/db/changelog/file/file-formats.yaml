@@ -1,0 +1,1023 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-file-formats-table
+      author: tijaro
+      changes:
+        - createTable:
+            tableName: file_formats
+            columns:
+              - column:
+                  name: uid
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: extension
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: mime_type
+                  type: VARCHAR(150)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: category_uid
+                  type: UUID
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: created_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: created_by
+                  type: UUID
+
+              - column:
+                  name: modified_at
+                  type: TIMESTAMP WITH TIME ZONE
+
+              - column:
+                  name: modified_by
+                  type: UUID
+
+              - column:
+                  name: deleted_at
+                  type: TIMESTAMP WITH TIME ZONE
+
+              - column:
+                  name: deleted_by
+                  type: UUID
+
+              - column:
+                  name: is_deleted
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+                  defaultValueBoolean: false
+
+        - addUniqueConstraint:
+            tableName: file_formats
+            columnNames: extension, mime_type
+            constraintName: uk_file_format_extension_mime_type
+
+        - addForeignKeyConstraint:
+            baseTableName: file_formats
+            baseColumnNames: category_uid
+            referencedTableName: file_categories
+            referencedColumnNames: uid
+            constraintName: fk_file_formats_category
+
+  - changeSet:
+      id: rename-file-formats-category-uid-to-file-category-uid
+      author: tijaro
+      changes:
+      - renameColumn:
+          tableName: file_formats
+          oldColumnName: category_uid
+          newColumnName: file_category_uid
+          columnDataType: UUID
+
+  - changeSet:
+      id: seed-image-file-formats
+      author: tijaro
+      changes:
+        - insert:
+            tableName: file_formats
+            columns:
+              - column:
+                  name: uid
+                  value: "a1b2c3d4-e5f6-4789-a012-3456789abcde"
+              - column:
+                  name: extension
+                  value: "jpg"
+              - column:
+                  name: mime_type
+                  value: "image/jpeg"
+              - column:
+                  name: file_category_uid
+                  value: "7d7e4b5e-0e4d-4f9b-9f1a-4c6d2a8b3e01"
+              - column:
+                  name: created_at
+                  valueDate: "now()"
+              - column:
+                  name: is_deleted
+                  valueBoolean: false
+
+        - insert:
+            tableName: file_formats
+            columns:
+              - column:
+                  name: uid
+                  value: "b2c3d4e5-f6a7-4890-b123-456789abcdef"
+              - column:
+                  name: extension
+                  value: "jpeg"
+              - column:
+                  name: mime_type
+                  value: "image/jpeg"
+              - column:
+                  name: file_category_uid
+                  value: "7d7e4b5e-0e4d-4f9b-9f1a-4c6d2a8b3e01"
+              - column:
+                  name: created_at
+                  valueDate: "now()"
+              - column:
+                  name: is_deleted
+                  valueBoolean: false
+
+        - insert:
+            tableName: file_formats
+            columns:
+              - column:
+                  name: uid
+                  value: "c3d4e5f6-a7b8-4901-c234-56789abcdef0"
+              - column:
+                  name: extension
+                  value: "png"
+              - column:
+                  name: mime_type
+                  value: "image/png"
+              - column:
+                  name: file_category_uid
+                  value: "7d7e4b5e-0e4d-4f9b-9f1a-4c6d2a8b3e01"
+              - column:
+                  name: created_at
+                  valueDate: "now()"
+              - column:
+                  name: is_deleted
+                  valueBoolean: false
+
+        - insert:
+            tableName: file_formats
+            columns:
+              - column:
+                  name: uid
+                  value: "d4e5f6a7-b8c9-4012-d345-6789abcdef01"
+              - column:
+                  name: extension
+                  value: "webp"
+              - column:
+                  name: mime_type
+                  value: "image/webp"
+              - column:
+                  name: file_category_uid
+                  value: "7d7e4b5e-0e4d-4f9b-9f1a-4c6d2a8b3e01"
+              - column:
+                  name: created_at
+                  valueDate: "now()"
+              - column:
+                  name: is_deleted
+                  valueBoolean: false
+
+        - insert:
+            tableName: file_formats
+            columns:
+              - column:
+                  name: uid
+                  value: "e5f6a7b8-c9d0-4123-e456-789abcdef012"
+              - column:
+                  name: extension
+                  value: "gif"
+              - column:
+                  name: mime_type
+                  value: "image/gif"
+              - column:
+                  name: file_category_uid
+                  value: "7d7e4b5e-0e4d-4f9b-9f1a-4c6d2a8b3e01"
+              - column:
+                  name: created_at
+                  valueDate: "now()"
+              - column:
+                  name: is_deleted
+                  valueBoolean: false
+
+        - insert:
+            tableName: file_formats
+            columns:
+              - column:
+                  name: uid
+                  value: "f6a7b8c9-d0e1-4234-f567-89abcdef0123"
+              - column:
+                  name: extension
+                  value: "svg"
+              - column:
+                  name: mime_type
+                  value: "image/svg+xml"
+              - column:
+                  name: file_category_uid
+                  value: "7d7e4b5e-0e4d-4f9b-9f1a-4c6d2a8b3e01"
+              - column:
+                  name: created_at
+                  valueDate: "now()"
+              - column:
+                  name: is_deleted
+                  valueBoolean: false
+
+        - insert:
+            tableName: file_formats
+            columns:
+              - column:
+                  name: uid
+                  value: "a7b8c9d0-e1f2-4345-a678-9abcdef01234"
+              - column:
+                  name: extension
+                  value: "bmp"
+              - column:
+                  name: mime_type
+                  value: "image/bmp"
+              - column:
+                  name: file_category_uid
+                  value: "7d7e4b5e-0e4d-4f9b-9f1a-4c6d2a8b3e01"
+              - column:
+                  name: created_at
+                  valueDate: "now()"
+              - column:
+                  name: is_deleted
+                  valueBoolean: false
+
+        - insert:
+            tableName: file_formats
+            columns:
+              - column:
+                  name: uid
+                  value: "b8c9d0e1-f2a3-4456-b789-abcdef012345"
+              - column:
+                  name: extension
+                  value: "tiff"
+              - column:
+                  name: mime_type
+                  value: "image/tiff"
+              - column:
+                  name: file_category_uid
+                  value: "7d7e4b5e-0e4d-4f9b-9f1a-4c6d2a8b3e01"
+              - column:
+                  name: created_at
+                  valueDate: "now()"
+              - column:
+                  name: is_deleted
+                  valueBoolean: false
+
+        - insert:
+            tableName: file_formats
+            columns:
+              - column:
+                  name: uid
+                  value: "c9d0e1f2-a3b4-4567-c890-abcdef012345"
+              - column:
+                  name: extension
+                  value: "tif"
+              - column:
+                  name: mime_type
+                  value: "image/tiff"
+              - column:
+                  name: file_category_uid
+                  value: "7d7e4b5e-0e4d-4f9b-9f1a-4c6d2a8b3e01"
+              - column:
+                  name: created_at
+                  valueDate: "now()"
+              - column:
+                  name: is_deleted
+                  valueBoolean: false
+
+        - insert:
+            tableName: file_formats
+            columns:
+              - column:
+                  name: uid
+                  value: "d0e1f2a3-b4c5-4678-d901-abcdef012345"
+              - column:
+                  name: extension
+                  value: "ico"
+              - column:
+                  name: mime_type
+                  value: "image/x-icon"
+              - column:
+                  name: file_category_uid
+                  value: "7d7e4b5e-0e4d-4f9b-9f1a-4c6d2a8b3e01"
+              - column:
+                  name: created_at
+                  valueDate: "now()"
+              - column:
+                  name: is_deleted
+                  valueBoolean: false
+
+  - changeSet:
+      id: seed-video-file-formats
+      author: tijaro
+      changes:
+
+        - insert:
+            tableName: file_formats
+            columns:
+              - column:
+                  name: uid
+                  value: "1f4a9c2e-7b63-4d18-a5f0-92c7e1b84d36"
+              - column:
+                  name: extension
+                  value: "mp4"
+              - column:
+                  name: mime_type
+                  value: "video/mp4"
+              - column:
+                  name: file_category_uid
+                  value: "7d7e4b5e-0e4d-4f9b-9f1a-4c6d2a8b3e02"
+              - column:
+                  name: created_at
+                  valueDate: "now()"
+              - column:
+                  name: is_deleted
+                  valueBoolean: false
+
+        - insert:
+            tableName: file_formats
+            columns:
+              - column:
+                  name: uid
+                  value: "2a7d5e91-c438-4f06-b2e9-68d1a7c35f40"
+              - column:
+                  name: extension
+                  value: "webm"
+              - column:
+                  name: mime_type
+                  value: "video/webm"
+              - column:
+                  name: file_category_uid
+                  value: "7d7e4b5e-0e4d-4f9b-9f1a-4c6d2a8b3e02"
+              - column:
+                  name: created_at
+                  valueDate: "now()"
+              - column:
+                  name: is_deleted
+                  valueBoolean: false
+
+        - insert:
+            tableName: file_formats
+            columns:
+              - column:
+                  name: uid
+                  value: "3c8b1e64-d592-47af-90e3-1b6c5a72d804"
+              - column:
+                  name: extension
+                  value: "mov"
+              - column:
+                  name: mime_type
+                  value: "video/quicktime"
+              - column:
+                  name: file_category_uid
+                  value: "7d7e4b5e-0e4d-4f9b-9f1a-4c6d2a8b3e02"
+              - column:
+                  name: created_at
+                  valueDate: "now()"
+              - column:
+                  name: is_deleted
+                  valueBoolean: false
+
+        - insert:
+            tableName: file_formats
+            columns:
+              - column:
+                  name: uid
+                  value: "4e2f7a83-b169-4c50-a4d8-37f1e9b6250c"
+              - column:
+                  name: extension
+                  value: "avi"
+              - column:
+                  name: mime_type
+                  value: "video/x-msvideo"
+              - column:
+                  name: file_category_uid
+                  value: "7d7e4b5e-0e4d-4f9b-9f1a-4c6d2a8b3e02"
+              - column:
+                  name: created_at
+                  valueDate: "now()"
+              - column:
+                  name: is_deleted
+                  valueBoolean: false
+
+        - insert:
+            tableName: file_formats
+            columns:
+              - column:
+                  name: uid
+                  value: "5b6d3c90-e247-4a81-bf53-82c1d7e4690a"
+              - column:
+                  name: extension
+                  value: "mkv"
+              - column:
+                  name: mime_type
+                  value: "video/x-matroska"
+              - column:
+                  name: file_category_uid
+                  value: "7d7e4b5e-0e4d-4f9b-9f1a-4c6d2a8b3e02"
+              - column:
+                  name: created_at
+                  valueDate: "now()"
+              - column:
+                  name: is_deleted
+                  valueBoolean: false
+
+        - insert:
+            tableName: file_formats
+            columns:
+              - column:
+                  name: uid
+                  value: "6c9e4b25-f318-46d7-a052-94e1c8b7360f"
+              - column:
+                  name: extension
+                  value: "mpeg"
+              - column:
+                  name: mime_type
+                  value: "video/mpeg"
+              - column:
+                  name: file_category_uid
+                  value: "7d7e4b5e-0e4d-4f9b-9f1a-4c6d2a8b3e02"
+              - column:
+                  name: created_at
+                  valueDate: "now()"
+              - column:
+                  name: is_deleted
+                  valueBoolean: false
+
+        - insert:
+            tableName: file_formats
+            columns:
+              - column:
+                  name: uid
+                  value: "7d1a5f48-c692-4e30-b7f1-25d8a9c4630e"
+              - column:
+                  name: extension
+                  value: "mpg"
+              - column:
+                  name: mime_type
+                  value: "video/mpeg"
+              - column:
+                  name: file_category_uid
+                  value: "7d7e4b5e-0e4d-4f9b-9f1a-4c6d2a8b3e02"
+              - column:
+                  name: created_at
+                  valueDate: "now()"
+              - column:
+                  name: is_deleted
+                  valueBoolean: false
+
+        - insert:
+            tableName: file_formats
+            columns:
+              - column:
+                  name: uid
+                  value: "8e3c7b16-a945-42f0-9d68-51c2e7b4380a"
+              - column:
+                  name: extension
+                  value: "m4v"
+              - column:
+                  name: mime_type
+                  value: "video/x-m4v"
+              - column:
+                  name: file_category_uid
+                  value: "7d7e4b5e-0e4d-4f9b-9f1a-4c6d2a8b3e02"
+              - column:
+                  name: created_at
+                  valueDate: "now()"
+              - column:
+                  name: is_deleted
+                  valueBoolean: false
+
+        - insert:
+            tableName: file_formats
+            columns:
+              - column:
+                  name: uid
+                  value: "9f5d2a73-b804-4c61-ae39-76d1f8c5204b"
+              - column:
+                  name: extension
+                  value: "3gp"
+              - column:
+                  name: mime_type
+                  value: "video/3gpp"
+              - column:
+                  name: file_category_uid
+                  value: "7d7e4b5e-0e4d-4f9b-9f1a-4c6d2a8b3e02"
+              - column:
+                  name: created_at
+                  valueDate: "now()"
+              - column:
+                  name: is_deleted
+                  valueBoolean: false
+
+  - changeSet:
+      id: seed-audio-file-formats
+      author: afiq
+      changes:
+
+          - insert:
+              tableName: file_formats
+              columns:
+                - column:
+                    name: uid
+                    value: "c84f7a21-3d95-4b68-9e12-6f5a8c2d7143"
+                - column:
+                    name: extension
+                    value: ".mp3"
+                - column:
+                    name: mime_type
+                    value: "audio/mpeg"
+                - column:
+                    name: file_category_uid
+                    value: "7d7e4b5e-0e4d-4f9b-9f1a-4c6d2a8b3e03"
+                - column:
+                    name: created_at
+                    valueDate: "now()"
+                - column:
+                    name: is_deleted
+                    valueBoolean: false
+
+          - insert:
+              tableName: file_formats
+              columns:
+                - column:
+                    name: uid
+                    value: "5b2e91d7-846a-4c53-a1f9-73d6b82e4509"
+                - column:
+                    name: extension
+                    value: ".wav"
+                - column:
+                    name: mime_type
+                    value: "audio/wav"
+                - column:
+                    name: file_category_uid
+                    value: "7d7e4b5e-0e4d-4f9b-9f1a-4c6d2a8b3e03"
+                - column:
+                    name: created_at
+                    valueDate: "now()"
+                - column:
+                    name: is_deleted
+                    valueBoolean: false
+
+          - insert:
+              tableName: file_formats
+              columns:
+                - column:
+                    name: uid
+                    value: "f3176c42-9a85-4e71-b2d6-58c93a147e20"
+                - column:
+                    name: extension
+                    value: ".m4a"
+                - column:
+                    name: mime_type
+                    value: "audio/mp4"
+                - column:
+                    name: file_category_uid
+                    value: "7d7e4b5e-0e4d-4f9b-9f1a-4c6d2a8b3e03"
+                - column:
+                    name: created_at
+                    valueDate: "now()"
+                - column:
+                    name: is_deleted
+                    valueBoolean: false
+
+          - insert:
+              tableName: file_formats
+              columns:
+                - column:
+                    name: uid
+                    value: "8d64b3f1-27e9-45a8-c6d2-91f7e5340ab8"
+                - column:
+                    name: extension
+                    value: ".aac"
+                - column:
+                    name: mime_type
+                    value: "audio/aac"
+                - column:
+                    name: file_category_uid
+                    value: "7d7e4b5e-0e4d-4f9b-9f1a-4c6d2a8b3e03"
+                - column:
+                    name: created_at
+                    valueDate: "now()"
+                - column:
+                    name: is_deleted
+                    valueBoolean: false
+
+          - insert:
+              tableName: file_formats
+              columns:
+                - column:
+                    name: uid
+                    value: "42e9a7c5-6d31-4b82-9f54-a813c7e26017"
+                - column:
+                    name: extension
+                    value: ".flac"
+                - column:
+                    name: mime_type
+                    value: "audio/flac"
+                - column:
+                    name: file_category_uid
+                    value: "7d7e4b5e-0e4d-4f9b-9f1a-4c6d2a8b3e03"
+                - column:
+                    name: created_at
+                    valueDate: "now()"
+                - column:
+                    name: is_deleted
+                    valueBoolean: false
+
+          - insert:
+              tableName: file_formats
+              columns:
+                - column:
+                    name: uid
+                    value: "7a53d9e2-1c84-46f7-b295-63e8a41d720c"
+                - column:
+                    name: extension
+                    value: ".ogg"
+                - column:
+                    name: mime_type
+                    value: "audio/ogg"
+                - column:
+                    name: file_category_uid
+                    value: "7d7e4b5e-0e4d-4f9b-9f1a-4c6d2a8b3e03"
+                - column:
+                    name: created_at
+                    valueDate: "now()"
+                - column:
+                    name: is_deleted
+                    valueBoolean: false
+
+          - insert:
+              tableName: file_formats
+              columns:
+                - column:
+                    name: uid
+                    value: "e6914c38-75b2-4a06-d923-8f51c7be2046"
+                - column:
+                    name: extension
+                    value: ".opus"
+                - column:
+                    name: mime_type
+                    value: "audio/opus"
+                - column:
+                    name: file_category_uid
+                    value: "7d7e4b5e-0e4d-4f9b-9f1a-4c6d2a8b3e03"
+                - column:
+                    name: created_at
+                    valueDate: "now()"
+                - column:
+                    name: is_deleted
+                    valueBoolean: false
+
+          - insert:
+              tableName: file_formats
+              columns:
+                - column:
+                    name: uid
+                    value: "3f82b6d9-54a1-47c8-e365-92a71d4b6085"
+                - column:
+                    name: extension
+                    value: ".webm"
+                - column:
+                    name: mime_type
+                    value: "audio/webm"
+                - column:
+                    name: file_category_uid
+                    value: "7d7e4b5e-0e4d-4f9b-9f1a-4c6d2a8b3e03"
+                - column:
+                    name: created_at
+                    valueDate: "now()"
+                - column:
+                    name: is_deleted
+                    valueBoolean: false
+
+  - changeSet:
+      id: update-audio-file-format-extensions
+      author: afiq
+      changes:
+        - update:
+            tableName: file_formats
+            columns:
+              - column:
+                  name: extension
+                  value: "mp3"
+            where: "extension = '.mp3'"
+
+        - update:
+            tableName: file_formats
+            columns:
+              - column:
+                  name: extension
+                  value: "wav"
+            where: "extension = '.wav'"
+
+        - update:
+            tableName: file_formats
+            columns:
+              - column:
+                  name: extension
+                  value: "m4a"
+            where: "extension = '.m4a'"
+
+        - update:
+            tableName: file_formats
+            columns:
+              - column:
+                  name: extension
+                  value: "aac"
+            where: "extension = '.aac'"
+
+        - update:
+            tableName: file_formats
+            columns:
+              - column:
+                  name: extension
+                  value: "flac"
+            where: "extension = '.flac'"
+
+        - update:
+            tableName: file_formats
+            columns:
+              - column:
+                  name: extension
+                  value: "ogg"
+            where: "extension = '.ogg'"
+
+        - update:
+            tableName: file_formats
+            columns:
+              - column:
+                  name: extension
+                  value: "opus"
+            where: "extension = '.opus'"
+
+        - update:
+            tableName: file_formats
+            columns:
+              - column:
+                  name: extension
+                  value: "webm"
+            where: "extension = '.webm'"
+
+  - changeSet:
+      id: seed-document-file-formats
+      author: afiq
+      changes:
+
+        - insert:
+            tableName: file_formats
+            columns:
+              - column:
+                  name: uid
+                  value: "b6f2c841-9d37-4e15-a682-73c5f9142d08"
+              - column:
+                  name: extension
+                  value: "pdf"
+              - column:
+                  name: mime_type
+                  value: "application/pdf"
+              - column:
+                  name: file_category_uid
+                  value: "7d7e4b5e-0e4d-4f9b-9f1a-4c6d2a8b3e04"
+              - column:
+                  name: created_at
+                  valueDate: "now()"
+              - column:
+                  name: is_deleted
+                  valueBoolean: false
+
+        - insert:
+            tableName: file_formats
+            columns:
+              - column:
+                  name: uid
+                  value: "4e8a1c73-52b9-46d1-b835-9f27c6a410de"
+              - column:
+                  name: extension
+                  value: "doc"
+              - column:
+                  name: mime_type
+                  value: "application/msword"
+              - column:
+                  name: file_category_uid
+                  value: "7d7e4b5e-0e4d-4f9b-9f1a-4c6d2a8b3e04"
+              - column:
+                  name: created_at
+                  valueDate: "now()"
+              - column:
+                  name: is_deleted
+                  valueBoolean: false
+
+        - insert:
+            tableName: file_formats
+            columns:
+              - column:
+                  name: uid
+                  value: "91d5f3a8-27c4-4b6e-a159-83e72c0f541b"
+              - column:
+                  name: extension
+                  value: "docx"
+              - column:
+                  name: mime_type
+                  value: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+              - column:
+                  name: file_category_uid
+                  value: "7d7e4b5e-0e4d-4f9b-9f1a-4c6d2a8b3e04"
+              - column:
+                  name: created_at
+                  valueDate: "now()"
+              - column:
+                  name: is_deleted
+                  valueBoolean: false
+
+        - insert:
+            tableName: file_formats
+            columns:
+              - column:
+                  name: uid
+                  value: "c37a9e52-6f18-4d83-b204-71e5c9a6f032"
+              - column:
+                  name: extension
+                  value: "xls"
+              - column:
+                  name: mime_type
+                  value: "application/vnd.ms-excel"
+              - column:
+                  name: file_category_uid
+                  value: "7d7e4b5e-0e4d-4f9b-9f1a-4c6d2a8b3e04"
+              - column:
+                  name: created_at
+                  valueDate: "now()"
+              - column:
+                  name: is_deleted
+                  valueBoolean: false
+
+        - insert:
+            tableName: file_formats
+            columns:
+              - column:
+                  name: uid
+                  value: "e581b4c7-39a2-45d6-8f13-c927a6e0548b"
+              - column:
+                  name: extension
+                  value: "xlsx"
+              - column:
+                  name: mime_type
+                  value: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+              - column:
+                  name: file_category_uid
+                  value: "7d7e4b5e-0e4d-4f9b-9f1a-4c6d2a8b3e04"
+              - column:
+                  name: created_at
+                  valueDate: "now()"
+              - column:
+                  name: is_deleted
+                  valueBoolean: false
+
+        - insert:
+            tableName: file_formats
+            columns:
+              - column:
+                  name: uid
+                  value: "2a74d9e6-813c-4b52-a7f0-65c931e842bd"
+              - column:
+                  name: extension
+                  value: "ppt"
+              - column:
+                  name: mime_type
+                  value: "application/vnd.ms-powerpoint"
+              - column:
+                  name: file_category_uid
+                  value: "7d7e4b5e-0e4d-4f9b-9f1a-4c6d2a8b3e04"
+              - column:
+                  name: created_at
+                  valueDate: "now()"
+              - column:
+                  name: is_deleted
+                  valueBoolean: false
+
+        - insert:
+            tableName: file_formats
+            columns:
+              - column:
+                  name: uid
+                  value: "f943c2a6-58d1-4e79-b305-82a7c6149eb3"
+              - column:
+                  name: extension
+                  value: "pptx"
+              - column:
+                  name: mime_type
+                  value: "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+              - column:
+                  name: file_category_uid
+                  value: "7d7e4b5e-0e4d-4f9b-9f1a-4c6d2a8b3e04"
+              - column:
+                  name: created_at
+                  valueDate: "now()"
+              - column:
+                  name: is_deleted
+                  valueBoolean: false
+
+        - insert:
+            tableName: file_formats
+            columns:
+              - column:
+                  name: uid
+                  value: "6c15e8b4-73a9-42d6-b081-54f7c9321ae5"
+              - column:
+                  name: extension
+                  value: "txt"
+              - column:
+                  name: mime_type
+                  value: "text/plain"
+              - column:
+                  name: file_category_uid
+                  value: "7d7e4b5e-0e4d-4f9b-9f1a-4c6d2a8b3e04"
+              - column:
+                  name: created_at
+                  valueDate: "now()"
+              - column:
+                  name: is_deleted
+                  valueBoolean: false
+
+        - insert:
+            tableName: file_formats
+            columns:
+              - column:
+                  name: uid
+                  value: "a829f5d3-41c7-4e62-b908-76c1d4532fa7"
+              - column:
+                  name: extension
+                  value: "csv"
+              - column:
+                  name: mime_type
+                  value: "text/csv"
+              - column:
+                  name: file_category_uid
+                  value: "7d7e4b5e-0e4d-4f9b-9f1a-4c6d2a8b3e04"
+              - column:
+                  name: created_at
+                  valueDate: "now()"
+              - column:
+                  name: is_deleted
+                  valueBoolean: false
+
+        - insert:
+            tableName: file_formats
+            columns:
+              - column:
+                  name: uid
+                  value: "d472c6e1-95a3-48f7-b210-63e9a8541c76"
+              - column:
+                  name: extension
+                  value: "rtf"
+              - column:
+                  name: mime_type
+                  value: "application/rtf"
+              - column:
+                  name: file_category_uid
+                  value: "7d7e4b5e-0e4d-4f9b-9f1a-4c6d2a8b3e04"
+              - column:
+                  name: created_at
+                  valueDate: "now()"
+              - column:
+                  name: is_deleted
+                  valueBoolean: false
+
+        - insert:
+            tableName: file_formats
+            columns:
+              - column:
+                  name: uid
+                  value: "718e4a95-2c63-4f81-b537-96d2e0a4138c"
+              - column:
+                  name: extension
+                  value: "odt"
+              - column:
+                  name: mime_type
+                  value: "application/vnd.oasis.opendocument.text"
+              - column:
+                  name: file_category_uid
+                  value: "7d7e4b5e-0e4d-4f9b-9f1a-4c6d2a8b3e04"
+              - column:
+                  name: created_at
+                  valueDate: "now()"
+              - column:
+                  name: is_deleted
+                  valueBoolean: false
+
+  - changeSet:
+      id: rename-file-formats-unique-constraint
+      author: afiq
+      changes:
+        - dropUniqueConstraint:
+            tableName: file_formats
+            constraintName: uk_file_format_extension_mime_type
+
+        - addUniqueConstraint:
+            tableName: file_formats
+            columnNames: extension, mime_type
+            constraintName: uk_file_formats_extension_mime_type

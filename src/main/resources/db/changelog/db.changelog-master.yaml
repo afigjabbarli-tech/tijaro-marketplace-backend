@@ -1,0 +1,12 @@
+databaseChangeLog:
+
+  - include:
+      file: db/changelog/geography/countries.yaml
+  - include:
+      file: db/changelog/file/file-categories.yaml
+  - include:
+      file: db/changelog/file/file-formats.yaml
+  - include:
+      file: db/changelog/file/files.yaml
+  - include:
+      file: db/changelog/file/file_attachments.yaml

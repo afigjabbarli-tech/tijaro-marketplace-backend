@@ -1,0 +1,154 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-files-table
+      author: tijaro
+      changes:
+        - createTable:
+            tableName: files
+            columns:
+              - column:
+                  name: uid
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: original_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: stored_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+
+              - column:
+                  name: size
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: storage_path
+                  type: VARCHAR(500)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: checksum
+                  type: VARCHAR(64)
+
+              - column:
+                  name: storage_provider
+                  type: VARCHAR(30)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: role
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: file_format_uid
+                  type: UUID
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: created_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: created_by
+                  type: UUID
+
+              - column:
+                  name: modified_at
+                  type: TIMESTAMP WITH TIME ZONE
+
+              - column:
+                  name: modified_by
+                  type: UUID
+
+              - column:
+                  name: deleted_at
+                  type: TIMESTAMP WITH TIME ZONE
+
+              - column:
+                  name: deleted_by
+                  type: UUID
+
+              - column:
+                  name: is_deleted
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: files
+            baseColumnNames: file_format_uid
+            referencedTableName: file_formats
+            referencedColumnNames: uid
+            constraintName: fk_files_file_format
+  - changeSet:
+      id: add-display-order-to-files
+      author: tijaro
+      changes:
+        - addColumn:
+            tableName: files
+            columns:
+              - column:
+                  name: display_order
+                  type: INTEGER
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: remove-role-from-files
+      author: tijaro
+      changes:
+        - dropColumn:
+            tableName: files
+            columnName: role
+
+  - changeSet:
+      id: remove-display-order-from-files
+      author: tijaro
+      changes:
+        - dropColumn:
+            tableName: files
+            columnName: display_order
+
+  - changeSet:
+      id: update-file-storage-fields
+      author: tijaro
+      changes:
+        - dropColumn:
+            tableName: files
+            columnName: storage_path
+
+        - addColumn:
+            tableName: files
+            columns:
+              - column:
+                  name: relative_path
+                  type: VARCHAR(500)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: storage_key
+                  type: VARCHAR(500)
+                  constraints:
+                    nullable: false
+                    unique: true

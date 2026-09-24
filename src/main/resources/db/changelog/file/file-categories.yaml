@@ -1,0 +1,150 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-file-categories-table
+      author: tijaro
+      changes:
+        - createTable:
+            tableName: file_categories
+            columns:
+              - column:
+                  name: uid
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: name
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+                    unique: true
+
+              - column:
+                  name: description
+                  type: TEXT
+
+              - column:
+                  name: created_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: created_by
+                  type: UUID
+
+              - column:
+                  name: modified_at
+                  type: TIMESTAMP WITH TIME ZONE
+
+              - column:
+                  name: modified_by
+                  type: UUID
+
+              - column:
+                  name: deleted_at
+                  type: TIMESTAMP WITH TIME ZONE
+
+              - column:
+                  name: deleted_by
+                  type: UUID
+
+              - column:
+                  name: is_deleted
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: seed-file-categories
+      author: tijaro
+      changes:
+        - insert:
+            tableName: file_categories
+            columns:
+              - column:
+                  name: uid
+                  value: "7d7e4b5e-0e4d-4f9b-9f1a-4c6d2a8b3e01"
+              - column:
+                  name: name
+                  value: "IMAGE"
+              - column:
+                  name: description
+                  value: "Digital files containing still visual content represented as raster or vector graphics."
+              - column:
+                  name: created_at
+                  valueDate: "now()"
+              - column:
+                  name: is_deleted
+                  valueBoolean: false
+
+        - insert:
+            tableName: file_categories
+            columns:
+              - column:
+                  name: uid
+                  value: "7d7e4b5e-0e4d-4f9b-9f1a-4c6d2a8b3e02"
+              - column:
+                  name: name
+                  value: "VIDEO"
+              - column:
+                  name: description
+                  value: "Digital files containing sequential visual frames, typically accompanied by an audio track."
+              - column:
+                  name: created_at
+                  valueDate: "now()"
+              - column:
+                  name: is_deleted
+                  valueBoolean: false
+
+        - insert:
+            tableName: file_categories
+            columns:
+              - column:
+                  name: uid
+                  value: "7d7e4b5e-0e4d-4f9b-9f1a-4c6d2a8b3e03"
+              - column:
+                  name: name
+                  value: "AUDIO"
+              - column:
+                  name: description
+                  value: "Digital files containing encoded audio or other audible sound content."
+              - column:
+                  name: created_at
+                  valueDate: "now()"
+              - column:
+                  name: is_deleted
+                  valueBoolean: false
+
+        - insert:
+            tableName: file_categories
+            columns:
+              - column:
+                  name: uid
+                  value: "7d7e4b5e-0e4d-4f9b-9f1a-4c6d2a8b3e04"
+              - column:
+                  name: name
+                  value: "DOCUMENT"
+              - column:
+                  name: description
+                  value: "Digital files containing structured or unstructured textual, tabular, or formatted document content."
+              - column:
+                  name: created_at
+                  valueDate: "now()"
+              - column:
+                  name: is_deleted
+                  valueBoolean: false
+
+  - changeSet:
+      id: fix-file-categories-created-at
+      author: tijaro
+      changes:
+        - update:
+            tableName: file_categories
+            columns:
+              - column:
+                  name: created_at
+                  valueComputed: "CURRENT_TIMESTAMP"
+            where: "name IN ('IMAGE', 'VIDEO', 'AUDIO', 'DOCUMENT')"

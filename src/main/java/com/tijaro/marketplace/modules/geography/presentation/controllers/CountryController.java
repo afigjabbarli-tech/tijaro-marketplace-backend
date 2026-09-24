@@ -1,0 +1,53 @@
+package com.tijaro.marketplace.modules.geography.presentation.controllers;
+
+import com.tijaro.marketplace.common.application.responses.ApiResponse;
+import com.tijaro.marketplace.modules.geography.application.services.ICountryService;
+import com.tijaro.marketplace.modules.geography.presentation.requests.country.CreateCountryRequest;
+import com.tijaro.marketplace.modules.geography.presentation.responses.country.CreateCountryResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
+
+@RestController
+@RequestMapping("/api/v1/countries")
+@RequiredArgsConstructor
+public class CountryController {
+
+    private final ICountryService countryService;
+
+    @Operation(
+            summary = "Create country",
+            description = "Creates a country with its flag."
+    )
+    @PostMapping(
+            value = "/create",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
+    public ResponseEntity<ApiResponse<CreateCountryResponse>> create(
+            @Valid @ModelAttribute CreateCountryRequest request
+    ) {
+
+        var createCountryResponse = countryService.createCountry(request);
+
+        var apiResponse = new ApiResponse<>(
+                true,
+                HttpStatus.CREATED.value(),
+                "Resource created successfully.",
+                createCountryResponse
+        );
+
+        URI location = URI.create(
+                "/api/v1/countries/" + createCountryResponse.getUid()
+        );
+
+        return ResponseEntity
+                .created(location)
+                .body(apiResponse);
+    }
+}
