@@ -5,6 +5,7 @@ import com.tijaro.marketplace.modules.file.domain.repositories.IFileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -23,5 +24,10 @@ public class FileRepository implements IFileRepository {
     public Optional<File> findByUid(UUID uid)
     {
         return jpaFileRepository.findByUid(uid);
+    }
+
+    @Override
+    public List<File> findAllByUidIn(List<UUID> uids) {
+        return jpaFileRepository.findAllByUidIn(uids);
     }
 }

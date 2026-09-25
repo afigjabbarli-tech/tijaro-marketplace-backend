@@ -2,6 +2,7 @@ package com.tijaro.marketplace.modules.geography.domain.repositories;
 
 import com.tijaro.marketplace.modules.geography.domain.models.Country;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -22,4 +23,6 @@ public interface ICountryRepository {
     Country save(Country country);
 
     Optional<Country> findByUid(UUID uid);
+
+    List<Country> findAll();
 }
