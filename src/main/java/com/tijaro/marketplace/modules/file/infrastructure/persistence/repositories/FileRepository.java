@@ -5,6 +5,9 @@ import com.tijaro.marketplace.modules.file.domain.repositories.IFileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+import java.util.UUID;
+
 @Repository
 @RequiredArgsConstructor
 public class FileRepository implements IFileRepository {
@@ -14,5 +17,11 @@ public class FileRepository implements IFileRepository {
     @Override
     public File save(File file) {
         return jpaFileRepository.save(file);
+    }
+
+    @Override
+    public Optional<File> findByUid(UUID uid)
+    {
+        return jpaFileRepository.findByUid(uid);
     }
 }

@@ -1,26 +1,36 @@
 package com.tijaro.marketplace.modules.geography.infrastructure.persistence.services;
 
 import com.tijaro.marketplace.common.application.exceptions.DuplicateResourceException;
+import com.tijaro.marketplace.common.application.exceptions.ResourceNotFoundException;
 import com.tijaro.marketplace.modules.file.domain.enums.FileOwnerType;
 import com.tijaro.marketplace.modules.file.domain.enums.FilePurpose;
 import com.tijaro.marketplace.modules.file.domain.enums.StorageProvider;
+import com.tijaro.marketplace.modules.file.domain.repositories.IFileAttachmentRepository;
+import com.tijaro.marketplace.modules.file.domain.repositories.IFileRepository;
 import com.tijaro.marketplace.modules.geography.application.mappers.CountryMapper;
 import com.tijaro.marketplace.modules.geography.application.ports.FileCreatorPort;
+import com.tijaro.marketplace.modules.geography.application.ports.FileUrlProviderPort;
 import com.tijaro.marketplace.modules.geography.application.services.ICountryService;
 import com.tijaro.marketplace.modules.geography.domain.repositories.ICountryRepository;
 import com.tijaro.marketplace.modules.geography.presentation.requests.country.CreateCountryRequest;
 import com.tijaro.marketplace.modules.geography.presentation.responses.country.CreateCountryResponse;
+import com.tijaro.marketplace.modules.geography.presentation.responses.country.ShowCountryResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class CountryService implements ICountryService {
 
     private final ICountryRepository countryRepository;
+    private final IFileAttachmentRepository fileAttachmentRepository;
+    private final IFileRepository fileRepository;
     private final CountryMapper  countryMapper;
     private final FileCreatorPort  fileCreatorPort;
+    private final FileUrlProviderPort fileUrlProviderPort;
 
     @Override
     @Transactional
@@ -70,10 +80,32 @@ public class CountryService implements ICountryService {
 
         var savedCountry = countryRepository.save(country);
 
-        fileCreatorPort.create(request.getCountry_flag(), StorageProvider.LOCAL,
+        String flagUrl = fileCreatorPort.create(request.getCountry_flag(), StorageProvider.LOCAL,
                 FileOwnerType.COUNTRY, savedCountry.getUid(), FilePurpose.COUNTRY_FLAG,
                 0, true);
 
-        return countryMapper.mapToResponse(savedCountry);
+        return countryMapper.mapToCreateResponse(savedCountry, flagUrl);
+    }
+
+    @Override
+    public ShowCountryResponse getCountryByUid(UUID uid)
+    {
+        var country = countryRepository.findByUid(uid)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Country not found!")
+                );
+
+        var fileAttachment = fileAttachmentRepository
+                .findByOwnerUid(country.getUid())
+                .orElseThrow(() -> new ResourceNotFoundException("File attachment not found!"));
+
+        var file = fileRepository
+                .findByUid(fileAttachment.getFileUid())
+                .orElseThrow(() -> new ResourceNotFoundException("File not found!"));
+
+        String flagUrl = fileUrlProviderPort
+                .generate(file.getStorageKey());
+
+        return countryMapper.mapToShowResponse(country, flagUrl);
     }
 }

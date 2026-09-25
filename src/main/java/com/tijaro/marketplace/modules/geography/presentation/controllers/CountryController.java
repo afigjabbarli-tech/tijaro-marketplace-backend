@@ -4,6 +4,7 @@ import com.tijaro.marketplace.common.application.responses.ApiResponse;
 import com.tijaro.marketplace.modules.geography.application.services.ICountryService;
 import com.tijaro.marketplace.modules.geography.presentation.requests.country.CreateCountryRequest;
 import com.tijaro.marketplace.modules.geography.presentation.responses.country.CreateCountryResponse;
+import com.tijaro.marketplace.modules.geography.presentation.responses.country.ShowCountryResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/countries")
@@ -43,11 +45,33 @@ public class CountryController {
         );
 
         URI location = URI.create(
-                "/api/v1/countries/" + createCountryResponse.getUid()
+                "/api/v1/countries/show/" + createCountryResponse.getUid()
         );
 
         return ResponseEntity
                 .created(location)
                 .body(apiResponse);
     }
+    @GetMapping("/show/{uid}")
+    @Operation(
+            summary = "Get country by UID",
+            description = "Returns a country by its UID."
+    )
+    public ResponseEntity<ApiResponse<ShowCountryResponse>> getByUid(
+            @PathVariable("uid") UUID uid)
+    {
+        var showCountryResponse =
+                countryService.getCountryByUid(uid);
+
+        var apiResponse = new ApiResponse<>(
+                true,
+                HttpStatus.OK.value(),
+                "Resource retrieved successfully.",
+                showCountryResponse
+        );
+
+        return ResponseEntity
+                .ok(apiResponse);
+    }
+
 }

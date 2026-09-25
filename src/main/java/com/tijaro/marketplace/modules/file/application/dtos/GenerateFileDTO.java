@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 
-public record CreateFileDTO(MultipartFile file, StorageProvider storageProvider,
-                            FileOwnerType fileOwnerType, UUID fileOwnerUid,
-                            FilePurpose filePurpose, Integer sortOrder, boolean isPrimary) {
+public record GenerateFileDTO(MultipartFile file, StorageProvider storageProvider,
+                              FileOwnerType fileOwnerType, UUID fileOwnerUid,
+                              FilePurpose filePurpose, Integer sortOrder, boolean isPrimary) {
 }

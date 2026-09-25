@@ -8,7 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.UUID;
 
 public interface FileCreatorPort {
-    void create(MultipartFile file, StorageProvider storageProvider,
+    String create(MultipartFile file, StorageProvider storageProvider,
                 FileOwnerType fileOwnerType, UUID fileOwnerUid,
                 FilePurpose filePurpose, Integer sortOrder, boolean isPrimary);
 }
