@@ -5,6 +5,7 @@ import com.tijaro.marketplace.modules.geography.domain.repositories.ICountryRepo
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -53,5 +54,11 @@ public class CountryRepository implements ICountryRepository {
     @Override
     public Optional<Country> findByUid(UUID uid) {
         return jpaCountryRepository.findByUid(uid);
+    }
+
+    @Override
+    public List<Country> findAll()
+    {
+        return jpaCountryRepository.findAll();
     }
 }

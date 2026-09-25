@@ -5,12 +5,15 @@ import com.tijaro.marketplace.common.application.exceptions.ResourceNotFoundExce
 import com.tijaro.marketplace.modules.file.domain.enums.FileOwnerType;
 import com.tijaro.marketplace.modules.file.domain.enums.FilePurpose;
 import com.tijaro.marketplace.modules.file.domain.enums.StorageProvider;
+import com.tijaro.marketplace.modules.file.domain.models.File;
+import com.tijaro.marketplace.modules.file.domain.models.FileAttachment;
 import com.tijaro.marketplace.modules.file.domain.repositories.IFileAttachmentRepository;
 import com.tijaro.marketplace.modules.file.domain.repositories.IFileRepository;
 import com.tijaro.marketplace.modules.geography.application.mappers.CountryMapper;
 import com.tijaro.marketplace.modules.geography.application.ports.FileCreatorPort;
 import com.tijaro.marketplace.modules.geography.application.ports.FileUrlProviderPort;
 import com.tijaro.marketplace.modules.geography.application.services.ICountryService;
+import com.tijaro.marketplace.modules.geography.domain.models.Country;
 import com.tijaro.marketplace.modules.geography.domain.repositories.ICountryRepository;
 import com.tijaro.marketplace.modules.geography.presentation.requests.country.CreateCountryRequest;
 import com.tijaro.marketplace.modules.geography.presentation.responses.country.CreateCountryResponse;
@@ -19,7 +22,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -107,5 +113,74 @@ public class CountryService implements ICountryService {
                 .generate(file.getStorageKey());
 
         return countryMapper.mapToShowResponse(country, flagUrl);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ShowCountryResponse> getAllCountries() {
+
+        var countries = countryRepository.findAll();
+
+        if (countries.isEmpty()) {
+            return List.of();
+        }
+
+        var countryUids = countries.stream()
+                .map(Country::getUid)
+                .toList();
+
+        var attachments = fileAttachmentRepository
+                .findAllByOwnerTypeAndOwnerUidInAndFilePurpose(
+                        FileOwnerType.COUNTRY,
+                        countryUids,
+                        FilePurpose.COUNTRY_FLAG
+                );
+
+        var fileUids = attachments.stream()
+                .map(FileAttachment::getFileUid)
+                .toList();
+
+        var files = fileRepository.findAllByUidIn(fileUids);
+
+        var attachmentByOwnerUid = attachments.stream()
+                .collect(Collectors.toMap(
+                        FileAttachment::getOwnerUid,
+                        Function.identity()
+                ));
+
+        var fileByUid = files.stream()
+                .collect(Collectors.toMap(
+                        File::getUid,
+                        Function.identity()
+                ));
+
+        return countries.stream()
+                .map(country -> {
+
+                    var attachment = attachmentByOwnerUid.get(country.getUid());
+
+                    if (attachment == null) {
+                        throw new ResourceNotFoundException(
+                                "Country flag attachment not found!"
+                        );
+                    }
+
+                    var file = fileByUid.get(attachment.getFileUid());
+
+                    if (file == null) {
+                        throw new ResourceNotFoundException(
+                                "Country flag file not found!"
+                        );
+                    }
+
+                    var flagUrl = fileUrlProviderPort
+                            .generate(file.getStorageKey());
+
+                    return countryMapper.mapToShowResponse(
+                            country,
+                            flagUrl
+                    );
+                })
+                .toList();
     }
 }

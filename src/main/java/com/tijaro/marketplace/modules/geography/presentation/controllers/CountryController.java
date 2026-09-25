@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -73,5 +74,22 @@ public class CountryController {
         return ResponseEntity
                 .ok(apiResponse);
     }
+    @Operation(
+            summary = "Get all countries",
+            description = "Returns all countries."
+    )
+    @GetMapping("/show/all")
+    public ResponseEntity<ApiResponse<List<ShowCountryResponse>>> getAll() {
 
+        var countries = countryService.getAllCountries();
+
+        var apiResponse = new ApiResponse<>(
+                true,
+                HttpStatus.OK.value(),
+                "Resources retrieved successfully.",
+                countries
+        );
+
+        return ResponseEntity.ok(apiResponse);
+    }
 }
