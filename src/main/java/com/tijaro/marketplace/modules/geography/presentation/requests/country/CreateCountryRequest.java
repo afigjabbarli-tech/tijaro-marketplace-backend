@@ -23,7 +23,7 @@ public class CreateCountryRequest {
     @Size(min = 2, max = 100, message = "Native name must be between 2 and 100 characters!")
     private String native_name;
 
-    @Size(min = 50, max = 2500, message = "Description must be between 50 and 2500 characters!")
+    @Size(min = 25, max = 2500, message = "Description must be between 50 and 2500 characters!")
     private String description;
 
     @NotBlank(message = "ISO 2 code is required and cannot be blank!")

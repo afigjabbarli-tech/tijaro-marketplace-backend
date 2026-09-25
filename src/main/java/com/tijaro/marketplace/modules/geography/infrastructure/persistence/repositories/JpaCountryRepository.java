@@ -3,6 +3,7 @@ package com.tijaro.marketplace.modules.geography.infrastructure.persistence.repo
 import com.tijaro.marketplace.modules.geography.domain.models.Country;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public interface JpaCountryRepository extends JpaRepository<Country, UUID> {
@@ -17,4 +18,6 @@ public interface JpaCountryRepository extends JpaRepository<Country, UUID> {
     boolean existsByIso3Code(String iso3Code);
 
     boolean existsByNumericCode(String numericCode);
+
+    Optional<Country> findByUid(UUID uid);
 }

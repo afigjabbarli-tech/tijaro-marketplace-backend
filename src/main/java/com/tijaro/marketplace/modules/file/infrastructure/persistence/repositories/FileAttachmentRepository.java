@@ -5,6 +5,9 @@ import com.tijaro.marketplace.modules.file.domain.repositories.IFileAttachmentRe
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+import java.util.UUID;
+
 @Repository
 @RequiredArgsConstructor
 public class FileAttachmentRepository implements IFileAttachmentRepository {
@@ -14,5 +17,10 @@ public class FileAttachmentRepository implements IFileAttachmentRepository {
     public FileAttachment save(FileAttachment fileAttachment)
     {
         return jpaFileAttachmentRepository.save(fileAttachment);
+    }
+
+    public Optional<FileAttachment> findByOwnerUid(UUID uid)
+    {
+        return jpaFileAttachmentRepository.findByOwnerUid(uid);
     }
 }

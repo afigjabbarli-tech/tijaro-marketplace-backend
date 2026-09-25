@@ -3,6 +3,7 @@ package com.tijaro.marketplace.modules.geography.application.mappers;
 import com.tijaro.marketplace.modules.geography.domain.models.Country;
 import com.tijaro.marketplace.modules.geography.presentation.requests.country.CreateCountryRequest;
 import com.tijaro.marketplace.modules.geography.presentation.responses.country.CreateCountryResponse;
+import com.tijaro.marketplace.modules.geography.presentation.responses.country.ShowCountryResponse;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -26,8 +27,10 @@ public class CountryMapper {
         return country;
     }
 
-    public CreateCountryResponse mapToResponse(Country country) {
-
+    public CreateCountryResponse mapToCreateResponse(
+            Country country,
+            String flagUrl
+    ) {
         var response = new CreateCountryResponse();
 
         response.setUid(country.getUid());
@@ -42,11 +45,38 @@ public class CountryMapper {
         response.setCapital(country.getCapital());
         response.setPopulation(country.getPopulation());
         response.setArea_km2(country.getAreaKm2());
-
+        response.setFlag_url(flagUrl);
         response.setCreated_at(country.getCreatedAt());
         response.setCreated_by(country.getCreatedBy());
         response.setModified_at(country.getModifiedAt());
         response.setModified_by(country.getModifiedBy());
+
+        return response;
+    }
+
+    public ShowCountryResponse mapToShowResponse(
+            Country country,
+            String flagUrl
+    ) {
+        var response = new ShowCountryResponse();
+
+        response.setUid(country.getUid());
+        response.setName(country.getName());
+        response.setOfficial_name(country.getOfficialName());
+        response.setNative_name(country.getNativeName());
+        response.setDescription(country.getDescription());
+        response.setIso2_code(country.getIso2Code());
+        response.setIso3_code(country.getIso3Code());
+        response.setNumeric_code(country.getNumericCode());
+        response.setPhone_code(country.getPhoneCode());
+        response.setCapital(country.getCapital());
+        response.setPopulation(country.getPopulation());
+        response.setArea_km2(country.getAreaKm2());
+        response.setCreated_at(country.getCreatedAt());
+        response.setCreated_by(country.getCreatedBy());
+        response.setModified_at(country.getModifiedAt());
+        response.setModified_by(country.getModifiedBy());
+        response.setFlag_url(flagUrl);
 
         return response;
     }

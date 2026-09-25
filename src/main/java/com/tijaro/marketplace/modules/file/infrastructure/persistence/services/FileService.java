@@ -1,6 +1,6 @@
 package com.tijaro.marketplace.modules.file.infrastructure.persistence.services;
 
-import com.tijaro.marketplace.modules.file.application.dtos.CreateFileDTO;
+import com.tijaro.marketplace.modules.file.application.dtos.GenerateFileDTO;
 import com.tijaro.marketplace.modules.file.application.dtos.FileDeleteRequest;
 import com.tijaro.marketplace.modules.file.application.dtos.FileUploadRequest;
 import com.tijaro.marketplace.modules.file.application.dtos.FileUploadResult;
@@ -41,8 +41,8 @@ public class FileService implements IFileService {
 
     @Override
     @Transactional
-    public void createFile(
-            CreateFileDTO createFileDTO
+    public String generateFile(
+            GenerateFileDTO createFileDTO
     ) {
 
         MultipartFile multipartFile =
@@ -194,6 +194,13 @@ public class FileService implements IFileService {
         fileAttachmentRepository.save(
                 fileAttachment
         );
+
+        return storageResult.url();
+    }
+
+    @Override
+    public String generateUrl(String storageKey) {
+        return fileStorage.generateUrl(storageKey);
     }
 
     private void registerStorageCleanup(

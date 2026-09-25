@@ -3,11 +3,13 @@ package com.tijaro.marketplace.modules.file.domain.models;
 import com.tijaro.marketplace.common.domain.models.BaseEntity;
 import com.tijaro.marketplace.modules.file.domain.enums.*;
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.Setter;
 
 import java.util.UUID;
 
 @Entity
+@Getter
 @Setter
 @Table(
         name = "file_attachments",
