@@ -2,6 +2,7 @@ package com.tijaro.marketplace.modules.geography.application.mappers;
 
 import com.tijaro.marketplace.modules.geography.domain.models.Country;
 import com.tijaro.marketplace.modules.geography.presentation.requests.country.CreateCountryRequest;
+import com.tijaro.marketplace.modules.geography.presentation.responses.country.CountryOptionResponse;
 import com.tijaro.marketplace.modules.geography.presentation.responses.country.CreateCountryResponse;
 import com.tijaro.marketplace.modules.geography.presentation.responses.country.ShowCountryResponse;
 import org.springframework.stereotype.Component;
@@ -76,6 +77,18 @@ public class CountryMapper {
         response.setCreated_by(country.getCreatedBy());
         response.setModified_at(country.getModifiedAt());
         response.setModified_by(country.getModifiedBy());
+        response.setFlag_url(flagUrl);
+
+        return response;
+    }
+
+    public CountryOptionResponse mapToOptionResponse(Country country, String flagUrl)
+    {
+        var response = new CountryOptionResponse();
+
+        response.setUid(country.getUid());
+        response.setName(country.getName());
+        response.setPhone_code(country.getPhoneCode());
         response.setFlag_url(flagUrl);
 
         return response;

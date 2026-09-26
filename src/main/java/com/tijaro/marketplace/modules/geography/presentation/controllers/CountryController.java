@@ -3,6 +3,7 @@ package com.tijaro.marketplace.modules.geography.presentation.controllers;
 import com.tijaro.marketplace.common.application.responses.ApiResponse;
 import com.tijaro.marketplace.modules.geography.application.services.ICountryService;
 import com.tijaro.marketplace.modules.geography.presentation.requests.country.CreateCountryRequest;
+import com.tijaro.marketplace.modules.geography.presentation.responses.country.CountryOptionResponse;
 import com.tijaro.marketplace.modules.geography.presentation.responses.country.CreateCountryResponse;
 import com.tijaro.marketplace.modules.geography.presentation.responses.country.ShowCountryResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -91,5 +92,24 @@ public class CountryController {
         );
 
         return ResponseEntity.ok(apiResponse);
+    }
+    @Operation(
+            summary = "Get country options",
+            description = "Returns a list of countries with their UID, name," +
+                    " flag URL, and phone code for use in select and dropdown components."
+    )
+    @GetMapping("/show/options")
+    public ResponseEntity<ApiResponse<List<CountryOptionResponse>>> getOptions()
+    {
+           var options = countryService.getAllCountryOptions();
+
+           var apiResponse = new ApiResponse<>(
+                   true,
+                   HttpStatus.OK.value(),
+                   "Resources retrieved successfully.",
+                   options
+           );
+
+           return ResponseEntity.ok(apiResponse);
     }
 }
