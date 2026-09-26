@@ -1,5 +1,6 @@
 package com.tijaro.marketplace.modules.geography.application.services;
 import com.tijaro.marketplace.modules.geography.presentation.requests.country.CreateCountryRequest;
+import com.tijaro.marketplace.modules.geography.presentation.responses.country.CountryOptionResponse;
 import com.tijaro.marketplace.modules.geography.presentation.responses.country.CreateCountryResponse;
 import com.tijaro.marketplace.modules.geography.presentation.responses.country.ShowCountryResponse;
 
@@ -10,4 +11,5 @@ public interface ICountryService {
     CreateCountryResponse createCountry(CreateCountryRequest request);
     ShowCountryResponse getCountryByUid(UUID uid);
     List<ShowCountryResponse> getAllCountries();
+    List<CountryOptionResponse> getAllCountryOptions();
 }

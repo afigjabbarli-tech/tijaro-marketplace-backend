@@ -16,6 +16,7 @@ import com.tijaro.marketplace.modules.geography.application.services.ICountrySer
 import com.tijaro.marketplace.modules.geography.domain.models.Country;
 import com.tijaro.marketplace.modules.geography.domain.repositories.ICountryRepository;
 import com.tijaro.marketplace.modules.geography.presentation.requests.country.CreateCountryRequest;
+import com.tijaro.marketplace.modules.geography.presentation.responses.country.CountryOptionResponse;
 import com.tijaro.marketplace.modules.geography.presentation.responses.country.CreateCountryResponse;
 import com.tijaro.marketplace.modules.geography.presentation.responses.country.ShowCountryResponse;
 import lombok.RequiredArgsConstructor;
@@ -177,6 +178,69 @@ public class CountryService implements ICountryService {
                             .generate(file.getStorageKey());
 
                     return countryMapper.mapToShowResponse(
+                            country,
+                            flagUrl
+                    );
+                })
+                .toList();
+    }
+    public List<CountryOptionResponse> getAllCountryOptions()
+    {
+        var countries = countryRepository.findAll();
+        if (countries.isEmpty())
+        {
+            return List.of();
+        }
+
+        var countryUids = countries.stream()
+                .map(Country::getUid)
+                .toList();
+
+        var attachments = fileAttachmentRepository
+                .findAllByOwnerTypeAndOwnerUidInAndFilePurpose(FileOwnerType.COUNTRY,
+                        countryUids, FilePurpose.COUNTRY_FLAG);
+
+        var fileUids = attachments.stream()
+                .map(FileAttachment::getFileUid)
+                .toList();
+
+        var files = fileRepository.findAllByUidIn(fileUids);
+
+        var attachmentByOwnerUid = attachments.stream()
+                .collect(Collectors.toMap(
+                        FileAttachment::getOwnerUid,
+                        Function.identity()
+                ));
+
+        var fileByUid = files.stream()
+                .collect(Collectors.toMap(
+                        File::getUid,
+                        Function.identity()
+                ));
+
+        return countries.stream()
+                .map(country -> {
+
+                    var attachment = attachmentByOwnerUid.get(country.getUid());
+
+                    if (attachment == null) {
+                        throw new ResourceNotFoundException(
+                                "Country flag attachment not found!"
+                        );
+                    }
+
+                    var file = fileByUid.get(attachment.getFileUid());
+
+                    if (file == null) {
+                        throw new ResourceNotFoundException(
+                                "Country flag file not found!"
+                        );
+                    }
+
+                    var flagUrl = fileUrlProviderPort
+                            .generate(file.getStorageKey());
+
+                    return countryMapper.mapToOptionResponse(
                             country,
                             flagUrl
                     );
